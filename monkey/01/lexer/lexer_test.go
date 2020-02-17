@@ -2,7 +2,7 @@ package lexer
 
 import (
 	"testing"
-	"yohei-takara/stary-writing-an-interpreter-in-go/01/token"
+	"yohei-takara/stary-writing-an-interpreter-in-go/monkey/01/token"
 )
 
 func TestNextToken(t *testing.T) {
