@@ -1,0 +1,10 @@
+# intellij
+.idea/
+*.iml
+
+### macOS ###
+# General
+.DS_Store
+.AppleDouble
+.LSOverride
+
