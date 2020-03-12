@@ -18,6 +18,14 @@ const (
 	// 演算子
 	ASSIGN = "="
 	PLUS   = "+"
+	MINUS = "-"
+	BANG = "!"
+	ASTERISK = "*"
+	SLASH = "/"
+
+	LG = "<"
+	GT = ">"
+
 
 	// デリミタ
 	COMMA     = ","
@@ -31,6 +39,8 @@ const (
 	// キーワード
 	FUNCTION = "FUNCTION"
 	LET      = "LET"
+
+
 )
 
 var keywords = map[string]TokenType{
