@@ -7,6 +7,17 @@ import (
 	"yohei-takara/stary-writing-an-interpreter-in-go/monkey/01/token"
 )
 
+const (
+	_int = iota
+	LOWEST
+	EQUALS // ==
+	LESSGREATER // > or <
+	SUM // +
+	PRODUCT // *
+	PREFIX // -X or !X
+	CALL // myFunction(x)
+)
+
 type Parser struct {
 	l *lexer.Lexer
 	errors []string
@@ -30,7 +41,14 @@ func New(l *lexer.Lexer) *Parser {
 	p.nextToken()
 	p.nextToken()
 
+	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	p.registerPrefix(token.IDENT, p.parseIdentifier)
+
 	return p
+}
+
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal }
 }
 
 func (p *Parser) nextToken() {
@@ -58,8 +76,20 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.LET:
 		return p.parseLetStatement()
 	default:
-		return nil
+		return p.parseExpressionStatement()
 	}
+}
+
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	stmt := &ast.ExpressionStatement{Token: p.curToken}
+
+	stmt.Expression = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
 }
 
 func (p *Parser) parseLetStatement() *ast.LetStatement {
@@ -116,3 +146,14 @@ func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
 }
+
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+	if prefix == nil {
+		return nil
+	}
+
+	leftExp := prefix()
+	return leftExp
+}
+
