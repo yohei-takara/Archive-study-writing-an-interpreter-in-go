@@ -22,6 +22,8 @@ const (
 	BANG     = "!"
 	ASTERISK = "*"
 	SLASH    = "/"
+	EQ = "=="
+	NOT_EQ = "!="
 
 	// デリミタ
 	COMMA     = ","
@@ -41,7 +43,7 @@ const (
 	ELSE     = "ELSE"
 	RETURN   = "RETURN"
 
-	LG = "<"
+	LT = "<"
 	GT = ">"
 )
 
